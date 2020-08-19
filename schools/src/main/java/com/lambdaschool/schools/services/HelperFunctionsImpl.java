@@ -12,8 +12,12 @@ import java.util.List;
 public class HelperFunctionsImpl implements HelperFunctions{
 
     public List<ValidationError> getConstraintViolation(Throwable cause) {
-        while ((cause != null) && !(cause instanceof ConstraintViolationException)) {
 
+
+
+        while ((cause != null) && !(cause instanceof ConstraintViolationException)) {
+            cause = cause.getCause();
+        }
             List<ValidationError> listVE = new ArrayList<>();
 
             if (cause != null) {
@@ -26,9 +30,7 @@ public class HelperFunctionsImpl implements HelperFunctions{
                     listVE.add(newVe);
                 }
             }
-            cause = cause.getCause();
 
-        }
-        return listVE;
+            return listVE;
     }
 }

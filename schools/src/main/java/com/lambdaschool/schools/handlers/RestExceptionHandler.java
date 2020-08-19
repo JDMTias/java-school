@@ -44,6 +44,8 @@ private HelperFunctions helperFunctions;
         errorDetail.setDeveloperMessage(ex.getClass()
             .getName());
 
+        errorDetail.setErrors(helperFunctions.getConstraintViolation(ex));
+
         return new ResponseEntity<>(errorDetail,
                 null,
                 status);
