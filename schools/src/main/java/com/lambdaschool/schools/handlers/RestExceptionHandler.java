@@ -59,6 +59,27 @@ private HelperFunctions helperFunctions;
 
 
    }
+    @ExceptionHandler(NoHandlerFoundException.class)
+//    "detail": "Found an issue with School: No handler found for GET /turtle",
+//    "timestamp": "2020-05-05T20:34:38.579+0000",
+//    "developerMessage": "org.springframework.web.servlet.NoHandlerFoundException",
+//    "errors": []
+//
+    
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException nhfe)
+    {
+        ErrorDetail errorDetail = new ErrorDetail();
+        errorDetail.setTimestamp(new Date());
+        errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
+        errorDetail.setTitle("Rest Internal Exception");
+        errorDetail.setDetail(nhfe.getMessage());
+        errorDetail.setDeveloperMessage(nhfe.getClass().getName());
+        errorDetail.setErrors(helperFunctions.getConstraintViolation(nhfe));
+
+        return new ResponseEntity<>(errorDetail,
+                null,
+                HttpStatus.NOT_FOUND);
+    }
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
@@ -87,30 +108,5 @@ private HelperFunctions helperFunctions;
                 null,
                 status);
 
-    }
-
-    @Override
-//    "detail": "Found an issue with School: No handler found for GET /turtle",
-//    "timestamp": "2020-05-05T20:34:38.579+0000",
-//    "developerMessage": "org.springframework.web.servlet.NoHandlerFoundException",
-//    "errors": []
-//}
-    protected ResponseEntity<Object> handleNoHandlerFoundException(
-            NoHandlerFoundException ex,
-            HttpHeaders headers,
-            HttpStatus status,
-            WebRequest request)
-    {
-        ErrorDetail errorDetail = new ErrorDetail();
-        errorDetail.setTimestamp(new Date());
-        errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
-        errorDetail.setTitle("Rest Internal Exception");
-        errorDetail.setDetail(request.getDescription(false));
-        errorDetail.setDeveloperMessage(ex.getClass());
-        errorDetail.setErrors(helperFunctions.getConstraintViolation(ex));
-
-        return new ResponseEntity<>(errorDetail,
-                null,
-                status);
     }
 }
