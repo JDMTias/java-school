@@ -26,8 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/students")
-public class StudentController
-{
+public class StudentController {
     /**
      * Using the Student service to process Student data
      */
@@ -42,12 +41,11 @@ public class StudentController
      * @see StudentService#findAll() StudentService.findAll()
      */
     @GetMapping(value = "/students",
-        produces = {"application/json"})
-    public ResponseEntity<?> listAllStudents()
-    {
+            produces = {"application/json"})
+    public ResponseEntity<?> listAllStudents() {
         List<Student> myStudents = studentService.findAll();
         return new ResponseEntity<>(myStudents,
-            HttpStatus.OK);
+                HttpStatus.OK);
     }
 
     /**
@@ -59,14 +57,13 @@ public class StudentController
      * @see StudentService#findStudentById(long) StudentService.findStudentById(long)
      */
     @GetMapping(value = "/student/{studentId}",
-        produces = {"application/json"})
+            produces = {"application/json"})
     public ResponseEntity<?> getStudentById(
-        @PathVariable
-            Long studentId)
-    {
+            @PathVariable
+                    Long studentId) {
         Student u = studentService.findStudentById(studentId);
         return new ResponseEntity<>(u,
-            HttpStatus.OK);
+                HttpStatus.OK);
     }
 
     /**
@@ -80,27 +77,26 @@ public class StudentController
      * @see StudentService#save(Student) StudentService.save(User)
      */
     @PostMapping(value = "/student",
-        consumes = {"application/json"})
+            consumes = {"application/json"})
     public ResponseEntity<?> addStudentUser(
-        @Valid
-        @RequestBody
-            Student newStudent) throws
-                                URISyntaxException
-    {
+            @Valid
+            @RequestBody
+                    Student newStudent) throws
+            URISyntaxException {
         newStudent.setStudentid(0);
         newStudent = studentService.save(newStudent);
 
         // set the location header for the newly created resource
         HttpHeaders responseHeaders = new HttpHeaders();
         URI newUserURI = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{studentid}")
-            .buildAndExpand(newStudent.getStudentid())
-            .toUri();
+                .path("/{studentid}")
+                .buildAndExpand(newStudent.getStudentid())
+                .toUri();
         responseHeaders.setLocation(newUserURI);
 
         return new ResponseEntity<>(null,
-            responseHeaders,
-            HttpStatus.CREATED);
+                responseHeaders,
+                HttpStatus.CREATED);
     }
 
     /**
@@ -115,14 +111,13 @@ public class StudentController
      * @see StudentService#save(Student) StudentService.save(Student)
      */
     @PutMapping(value = "/student/{studentid}",
-        consumes = {"application/json"})
+            consumes = {"application/json"})
     public ResponseEntity<?> updateFullstudent(
-        @Valid
-        @RequestBody
-            Student updateStudent,
-        @PathVariable
-            long studentid)
-    {
+            @Valid
+            @RequestBody
+                    Student updateStudent,
+            @PathVariable
+                    long studentid) {
         updateStudent.setStudentid(studentid);
         studentService.save(updateStudent);
 
@@ -139,9 +134,8 @@ public class StudentController
      */
     @DeleteMapping(value = "/student/{id}")
     public ResponseEntity<?> deleteStudentById(
-        @PathVariable
-            long id)
-    {
+            @PathVariable
+                    long id) {
         studentService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
